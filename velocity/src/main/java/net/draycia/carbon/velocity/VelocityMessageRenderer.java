@@ -65,7 +65,7 @@ public class VelocityMessageRenderer extends CarbonMessageRenderer {
                 if (sourced.sender() instanceof CarbonPlayerVelocity sender) {
                     tagResolver.resolver(MiniPlaceholders.getAudiencePlaceholders(sender));
                     if (sourced.recipient() instanceof CarbonPlayerVelocity recipient) {
-                        tagResolver.resolver(MiniPlaceholders.getRelationalGlobalPlaceholders(recipient, sender));
+                        tagResolver.resolver(MiniPlaceholders.getRelationalPlaceholders(recipient, sender));
                     }
                 } else if (sourced.sender() instanceof ConsoleCarbonPlayer console) {
                     // I don't know if this will ever actually resolve anything, or if anything supports console audience
