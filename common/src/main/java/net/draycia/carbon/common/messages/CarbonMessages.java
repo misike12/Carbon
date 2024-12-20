@@ -222,6 +222,9 @@ public interface CarbonMessages {
     @Message("nickname.error.filter")
     void nicknameErrorFilter(final Audience audience, final Component nickname);
 
+    @Message("nickname.error.impersonation")
+    void nicknameErrorImpersonation(final Audience audience, final Component nickname);
+
     @Message("nickname.show.others")
     void nicknameShowOthers(final Audience audience, final String target, final Component nickname);
 

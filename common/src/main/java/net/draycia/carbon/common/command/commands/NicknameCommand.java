@@ -20,6 +20,7 @@
 package net.draycia.carbon.common.command.commands;
 
 import com.google.inject.Inject;
+import net.draycia.carbon.api.CarbonChat;
 import net.draycia.carbon.api.users.CarbonPlayer;
 import net.draycia.carbon.common.command.CarbonCommand;
 import net.draycia.carbon.common.command.CommandSettings;
@@ -44,6 +45,7 @@ import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 @DefaultQualifier(NonNull.class)
 public final class NicknameCommand extends CarbonCommand {
 
+    private final CarbonChat carbonChat;
     private final CommandManager<Commander> commandManager;
     private final CarbonMessages carbonMessages;
     private final ParserFactory parserFactory;
@@ -51,11 +53,13 @@ public final class NicknameCommand extends CarbonCommand {
 
     @Inject
     public NicknameCommand(
+        final CarbonChat carbonChat,
         final CommandManager<Commander> commandManager,
         final CarbonMessages carbonMessages,
         final ParserFactory parserFactory,
         final ConfigManager config
     ) {
+        this.carbonChat = carbonChat;
         this.commandManager = commandManager;
         this.carbonMessages = carbonMessages;
         this.parserFactory = parserFactory;
@@ -146,7 +150,19 @@ public final class NicknameCommand extends CarbonCommand {
             return;
         }
 
-        target.nickname(parsedNick);
+        if (sender instanceof PlayerCommander playerCommander) {
+            if (playerCommander.carbonPlayer().username().equalsIgnoreCase(plainNick)) {
+                this.resetNickname(sender, playerCommander.carbonPlayer());
+                return;
+            }
+
+            for (final CarbonPlayer player : this.carbonChat.server().players()) {
+                if (player.username().equalsIgnoreCase(plainNick)) {
+                    this.carbonMessages.nicknameErrorImpersonation(sender, parsedNick);
+                    return;
+                }
+            }
+        }
 
         if (sender instanceof PlayerCommander playerCommander
             && playerCommander.carbonPlayer().uuid().equals(target.uuid())) {
@@ -157,6 +173,8 @@ public final class NicknameCommand extends CarbonCommand {
             this.carbonMessages.nicknameSet(target, parsedNick);
             this.carbonMessages.nicknameSetOthers(sender, target.username(), parsedNick);
         }
+
+        target.nickname(parsedNick);
     }
 
     private void checkOwnNickname(final CarbonPlayer sender) {
