@@ -3,7 +3,7 @@
 <b>Carbon</b> is a modern chat Java Edition plugin built on channels, with just about every single setting and format configurable.
 </p>
 
-## Support
+## Supports
 
 Support is given through [GitHub Issues](https://github.com/Hexaoxide/Carbon/issues)
 and [Discord](https://discord.gg/S8s75Yf).  
